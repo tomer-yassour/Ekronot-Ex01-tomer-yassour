@@ -5,7 +5,7 @@
 /* a queue contains positive integer values. */
 typedef struct Queue
 {
-	// Complete the definition here
+	int *queue 
 	
 } Queue;
 
