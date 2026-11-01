@@ -2,50 +2,6 @@
 #include "Queue.h"
 
 const unsigned int maxSize = 5;
-void printQueue(Queue* q);
-int main()
-{
-	Queue *q0 = new Queue;
-	initQueue(q0, maxSize);
-	std::cout << "initQueue: " << q0->rear->num << std::endl;
-
-	printQueue(q0);
-
-	enqueue(q0, 32);
-	std::cout << "enqueue: " << q0->rear->num << std::endl;
-	printQueue(q0);
-
-	dequeue(q0);
-	std::cout << "dequeue: " << q0->rear->num << std::endl;
-
-	std::cout << "is it empty: " << isEmpty(q0) << std::endl;
-	std::cout << "is it full: " << isFull(q0) << std::endl;
-
-	cleanQueue(q0);
-	if (q0->front == nullptr && q0->rear == nullptr)
-	{
-		std::cout << "success" << std::endl;
-	}
-
-	std::cout << "is it empty: " << isEmpty(q0) << std::endl;
-	std::cout << "is it full: " << isFull(q0) << std::endl;
-
-	return 0;
-}
-
-void printQueue(Queue* q)
-{
-	Node* current = q->front;
-	while (current != nullptr)
-	{
-		std::cout << current->num;
-
-		if (current->next != nullptr)
-			std::cout << " -> ";
-		current = current->next;
-	}
-	std::cout << std::endl;
-}
 
 void initQueue(Queue* q, unsigned int size)
 {
@@ -85,10 +41,6 @@ void cleanQueue(Queue* q)
 	}
 	q->front = nullptr;
 	q->rear = nullptr;
-	//delete current;
-	//current = nullptr;
-	//std::cout << q->front->next->num << std::endl;
-
 }
 
 void enqueue(Queue* q, unsigned int newValue)
@@ -108,8 +60,6 @@ int dequeue(Queue* q)
 	if (isEmpty(q))
 	{
 		returnValue = -1;
-		std::cout << "isEmpty" << std::endl;
-
 	}
 
 	else
