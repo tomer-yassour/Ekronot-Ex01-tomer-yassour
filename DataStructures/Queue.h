@@ -3,11 +3,16 @@
 
 
 /* a queue contains positive integer values. */
-typedef struct Queue
+typedef struct Node
 {
 	unsigned int num;
-	Queue* prev;
-	Queue* next;
+	struct Node* next;
+}Node;
+
+typedef struct Queue
+{
+	Node* rear;
+	Node* front;
 	
 } Queue;
 

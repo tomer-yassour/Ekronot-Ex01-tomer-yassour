@@ -2,25 +2,27 @@
 #include "Queue.h"
 
 const unsigned int maxSize = 5;
-int count = 0;
-
+void printQueue(Queue* q);
 int main()
 {
 	Queue *q0 = new Queue;
 	initQueue(q0, maxSize);
-	std::cout << "initQueue: " << q0->prev->next->num << std::endl;
+	std::cout << "initQueue: " << q0->rear->num << std::endl;
+
+	printQueue(q0);
 
 	enqueue(q0, 32);
-	std::cout << "enqueue: " << q0->prev->num << std::endl;
+	std::cout << "enqueue: " << q0->rear->num << std::endl;
+	printQueue(q0);
 
 	dequeue(q0);
-	std::cout << "dequeue: " << q0->next->num << std::endl;
+	std::cout << "dequeue: " << q0->rear->num << std::endl;
 
 	std::cout << "is it empty: " << isEmpty(q0) << std::endl;
 	std::cout << "is it full: " << isFull(q0) << std::endl;
 
 	cleanQueue(q0);
-	if (q0->prev == nullptr && q0->next == nullptr)
+	if (q0->front == nullptr && q0->rear == nullptr)
 	{
 		std::cout << "success" << std::endl;
 	}
@@ -31,87 +33,110 @@ int main()
 	return 0;
 }
 
+void printQueue(Queue* q)
+{
+	Node* current = q->front;
+	while (current != nullptr)
+	{
+		std::cout << current->num;
+
+		if (current->next != nullptr)
+			std::cout << " -> ";
+		current = current->next;
+	}
+	std::cout << std::endl;
+}
+
 void initQueue(Queue* q, unsigned int size)
 {
-	Queue* rear = new Queue;
-	Queue* front = new Queue;
-	Queue* current = new Queue;
+	Node* rear = new Node;
+	Node* front = new Node;
+	Node* current = new Node;
 	//making sure q is pointing at rear and front
-	q->num = 0;
-	q->prev = rear;
-	rear->num = 1;
-	rear->next = current;
-	q->next = front;
-	front->num = size;
-	current->prev = rear;
+	q->rear = rear;
+	q->front = front;
+	rear->num = size;
+	rear->next = nullptr;
+	front->num = 1;
+	front->next = current;
 
 	for (unsigned int i = 2; i < size - 1; i++)
 	{
 		//creating a node every cycle
 		current->num = i;
-		current->next = new Queue;
-		current->next->prev = current;
+		current->next = new Node;
 		current = current->next;
-		count++;
 	}
 	current->num = size - 1;
-	current->next = front;
-	front->prev = current;
+	current->next = rear;
 }
 
 void cleanQueue(Queue* q)
 {
-	Queue* current = q->prev;
-	Queue* temp = new Queue;
+	Node* current = q->front;
+	Node* temp;
 
-	while (current->next != nullptr)
+	while (current != nullptr)
 	{
 		temp = current->next;
 		delete current;
 		current = nullptr;
 		current = temp;
 	}
-	count = 0;
+	q->front = nullptr;
+	q->rear = nullptr;
+	//delete current;
+	//current = nullptr;
+	//std::cout << q->front->next->num << std::endl;
+
 }
 
 void enqueue(Queue* q, unsigned int newValue)
 {
-	Queue* newNode = new Queue;
+	Node* newNode = new Node;
 	newNode->num = newValue;
-	newNode->next = q->prev;
-	q->prev->prev = newNode;
-	q->prev = newNode;
-	count++;
+	q->rear->next = newNode;
+	q->rear = newNode;
+	newNode->next = nullptr;
 }
 
 int dequeue(Queue* q)
 {
 	int returnValue = -1;
-	Queue* currentFront = q->next;
-	Queue* newFront = q->next->prev;
+	Node* newFront = q->front->next;
 
 	if (isEmpty(q))
 	{
 		returnValue = -1;
+		std::cout << "isEmpty" << std::endl;
+
 	}
 
 	else
 	{
-		delete currentFront;
-		currentFront = nullptr;
-		q->next = newFront;
+		delete q->front;
+		q->front = nullptr;
+		q->front = newFront;
 		returnValue = newFront->num;
-		count--;
 	}
 	return returnValue;
 }
 
 bool isEmpty(Queue* s)
 {
-	return count == 0;
+	return s->front == nullptr;
 }
 
 bool isFull(Queue* s)
 {
+	int count = 0;
+	Node* current = s->front;
+
+	while (current != nullptr)
+	{
+		count++;
+		current = current->next;
+	}
+
 	return count >= maxSize;
 }
