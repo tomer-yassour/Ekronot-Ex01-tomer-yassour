@@ -4,7 +4,7 @@
 typedef struct Node
 {
 	int num;
-	Node* prev;
+	Node* next;
 }Node;
 
 void addNode(Node* head, int newValue);
